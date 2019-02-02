@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GSM Helper Tool</string>
+    <string name="message">This Helper tool application will send SMS to GSM Modem (SMS) application for sending SMS to your sever. It also receives SMS command from that App for sending to cellular network
+    </string>
+</resources>
