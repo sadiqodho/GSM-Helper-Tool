@@ -21,22 +21,24 @@ public class MySMSReceiver extends BroadcastReceiver {
         try {
             if (bundle != null) {
                 final Object[] pdusObj = (Object[]) bundle.get("pdus");
+                String phoneNumber = "";
+                String message = "";
                 for (int i = 0; i < pdusObj.length; i++) {
                     SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
-                    String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-                    String message = currentMessage.getDisplayMessageBody();
-                    try{
-                        Intent intent2 =new Intent();
-                        intent2.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                        intent2.setAction("com.gsmmodem");
-                        intent2.putExtra("phone", phoneNumber);
-                        intent2.putExtra("message", message);
-                        context.sendBroadcast(intent2);
-                    }catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-
+                    phoneNumber = currentMessage.getDisplayOriginatingAddress();
+                    message += currentMessage.getDisplayMessageBody();
                 } // end for loop
+
+                try{
+                    Intent intent2 =new Intent();
+                    intent2.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                    intent2.setAction("com.gsmmodem");
+                    intent2.putExtra("phone", phoneNumber);
+                    intent2.putExtra("message", message);
+                    context.sendBroadcast(intent2);
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             } // bundle is null
 
         } catch (Exception e) {
