@@ -17,12 +17,12 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MySMSReceiver">
+        <!--These background server are commented for api level 26 above-->
+        <!-- <receiver android:name=".MySMSReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
             </intent-filter>
@@ -31,8 +31,10 @@
         <receiver android:name=".SMSSender">
             <intent-filter>
                 <action android:name="helper.gsm.com.gsmhelpertool"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
-        </receiver>
+        </receiver> -->
 
     </application>
 
