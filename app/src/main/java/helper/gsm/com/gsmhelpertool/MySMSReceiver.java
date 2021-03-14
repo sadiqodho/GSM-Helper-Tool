@@ -36,6 +36,12 @@ public class MySMSReceiver extends BroadcastReceiver {
                     intent2.putExtra("phone", phoneNumber);
                     intent2.putExtra("message", message);
                     context.sendBroadcast(intent2);
+
+                    Intent logIntent = new Intent();
+                    logIntent.setAction(String.valueOf(R.string.log_receiver));
+                    logIntent.putExtra("phone", phoneNumber);
+                    logIntent.putExtra("message", message);
+                    context.sendBroadcast(logIntent);
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }

@@ -1,14 +1,22 @@
 package helper.gsm.com.gsmhelpertool;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private final static Integer NOT_SUPPORTED_VERSION = 8;
@@ -16,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private MySMSReceiver mySMSReceiver;
     private IntentFilter intentFilter;
     private IntentFilter intentFilterRec;
+    private IntentFilter smsLogFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         smsSender = new SMSSender();
         intentFilter = new IntentFilter("helper.gsm.com.gsmhelpertool");
+        smsLogFilter = new IntentFilter(String.valueOf(R.string.log_receiver));
 
         mySMSReceiver = new MySMSReceiver();
         intentFilterRec = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
@@ -51,8 +61,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        registerReceiver(smsSender, intentFilter);
+
+        // For listening for incoming SMS
         registerReceiver(mySMSReceiver, intentFilterRec);
+
+        // For internal logging
+        registerReceiver(smsLogBroadcastReceiver, smsLogFilter);
+
+        // for sending to the SmsSender
+        registerReceiver(smsSender, intentFilter);
     }
 
     @Override
@@ -60,5 +77,35 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(smsSender);
         unregisterReceiver(mySMSReceiver);
+        unregisterReceiver(smsLogBroadcastReceiver);
     }
+
+    BroadcastReceiver smsLogBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // internet lost alert dialog method call from here...
+
+            try {
+                final Bundle bundle = intent.getExtras();
+                String phone = bundle.getString("phone");
+                String message = bundle.getString("message");
+
+                String logMessage = "Received SMS from "
+                        + phone
+                        + " with content: ["
+                        + message
+                        + "]";
+
+                EditText editTextLog = (EditText) findViewById(R.id.editTextLog);
+                editTextLog.append(
+                        new Date().toString()
+                                + ": "
+                                + logMessage
+                                + "\n\n"
+                );
+            } catch (Exception e) {
+                Log.d(String.valueOf(R.string.log_receiver), "Error: " + e.getLocalizedMessage());
+            }
+        }
+    };
 }
