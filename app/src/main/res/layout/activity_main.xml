@@ -6,31 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        tools:ignore="MissingConstraints">
 
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="460dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:text="@string/send_sms_test" />
 
         <EditText
             android:id="@+id/editText"
@@ -38,48 +36,64 @@
             android:layout_height="wrap_content"
             android:drawableStart="@android:drawable/stat_sys_phone_call"
             android:drawableLeft="@android:drawable/stat_sys_phone_call"
-            android:ems="10"
-            android:hint="Phone Number"
-            android:inputType="none|phone"
-            tools:layout_editor_absoluteX="121dp"
-            tools:layout_editor_absoluteY="16dp" />
-
-
+            android:ems="12"
+            android:hint="@string/phone_number"
+            android:inputType="none|phone" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="30dp"
-        android:text="@string/message"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextLog"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="8dp"
-        android:editable="false"
-        android:ems="10"
-        android:focusable="auto"
-        android:focusableInTouchMode="false"
-        android:gravity="start|top"
-        android:inputType="none|textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints">
 
+        <ToggleButton
+            android:id="@+id/updateToGSMModemApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp"
+            android:checked="false"
+            android:textOff="@string/send_updates_off"
+            android:textOn="@string/send_updates_on"
+            android:layout_gravity="center_horizontal"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/editTextLog"
+            android:layout_width="0dp"
+            android:layout_height="550dp"
+            android:autofillHints=""
+            android:background="#000"
+            android:editable="false"
+            android:ems="10"
+            android:focusable="auto"
+            android:focusableInTouchMode="false"
+            android:gravity="start|top"
+            android:inputType="none|textMultiLine"
+            android:textColor="#fff"
+            app:layout_constraintTop_toBottomOf="@+id/updateToGSMModemApp"
+            app:layout_constraintBottom_toTopOf="@+id/message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="Deprecated" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/message"
+            android:textColor="@android:color/black"
+            android:textSize="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLog"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

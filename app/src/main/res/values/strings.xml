@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">GSM Helper Tool</string>
-    <string name="message">This Helper tool application will send SMS to GSM Modem (SMS) application for sending SMS to your sever. Keep this application active for background services.
+    <string name="message">This application is a helper tool for the GSM Modem app.
+        If you want to send status updates from this tool to the GSM Modem, turn on the status button above.\n\n
+        Keep this helper tool active for background services. It will send SMS to the GSM Modem app for forwarding messages to your server.
     </string>
     <string name="log_receiver">ca.fourandahalfgiraffes.SmsLogger</string>
+    <string name="send_sms_test">Send SMS (Test)</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="send_updates_off">Send Status to GSM Modem App (Off)</string>
+    <string name="send_updates_on">Send Status to GSM Modem App (On)</string>
 </resources>

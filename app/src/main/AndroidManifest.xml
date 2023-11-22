@@ -2,10 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="helper.gsm.com.gsmhelpertool">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <queries>
         <!-- Specific apps you interact with, eg: -->
@@ -26,27 +34,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--These background server are commented for api level 26 above-->
-        <!-- <receiver android:name=".MySMSReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
-            </intent-filter>
-        </receiver>
+        <service
+            android:name=".services.ForegroundService"
+            android:enabled="true"
+            android:exported="false" />
 
-        <receiver android:name=".SMSSender">
+        <!--These background server are commented for api level 26 above-->
+        <!--<receiver android:name=".MySMSReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
-                <action android:name="helper.gsm.com.gsmhelpertool"></action>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>-->
+
+        <!--<receiver android:name=".SMSSender"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="helper.gsm.com.gsmhelpertool"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
-        </receiver> -->
+        </receiver>-->
 
     </application>
 
