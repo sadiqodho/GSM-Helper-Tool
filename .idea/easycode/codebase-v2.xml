@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/app/src/androidTest/java/helper/gsm/com/gsmhelpertool/ExampleInstrumentedTest.java;/Users/sadiqodho/AndroidStudioProjects/updated/GSMHelperTool/app/src/main/java/helper/gsm/com/gsmhelpertool/MainActivity.java;/Users/sadiqodho/AndroidStudioProjects/updated/GSMHelperTool/app/src/main/java/helper/gsm/com/gsmhelpertool/MySMSReceiver.java;/Users/sadiqodho/AndroidStudioProjects/updated/GSMHelperTool/app/src/main/java/helper/gsm/com/gsmhelpertool/SMSSender.java;/Users/sadiqodho/AndroidStudioProjects/updated/GSMHelperTool/app/src/test/java/helper/gsm/com/gsmhelpertool/ExampleUnitTest.java;/Users/sadiqodho/AndroidStudioProjects/updated/GSMHelperTool/README.md" />
+  </component>
+</project>

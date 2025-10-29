@@ -18,6 +18,9 @@ import android.widget.EditText;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static android.content.Context.RECEIVER_NOT_EXPORTED;
+import static android.content.Context.RECEIVER_EXPORTED;
+
 public class MainActivity extends AppCompatActivity {
     private final static Integer NOT_SUPPORTED_VERSION = 8;
     private SMSSender smsSender;
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         smsSender = new SMSSender();
         intentFilter = new IntentFilter("helper.gsm.com.gsmhelpertool");
-        smsLogFilter = new IntentFilter(String.valueOf(R.string.log_receiver));
+        smsLogFilter = new IntentFilter(getString(R.string.log_receiver));
 
         mySMSReceiver = new MySMSReceiver();
         intentFilterRec = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
@@ -53,23 +56,59 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText editText = (EditText) findViewById(R.id.editText);
                 String phone = editText.getText().toString();
+                
+                if (phone == null || phone.isEmpty()) {
+                    android.util.Log.e("MainActivity", "Phone number is empty");
+                    return;
+                }
+                
+                // Get message from editTextLog or use a default message
+                String message = "Test message from GSM Helper Tool";
+                
+                android.util.Log.d("MainActivity", "Sending SMS to: " + phone + " with message: " + message);
+                
                 Intent intent = new Intent();
                 intent.setAction("helper.gsm.com.gsmhelpertool");
                 intent.putExtra("phone", phone);
-                intent.putExtra("message", phone);
-                sendBroadcast(intent);
+                intent.putExtra("message", message);
+                
+                try {
+                    sendBroadcast(intent);
+                    android.util.Log.d("MainActivity", "Broadcast sent for sending SMS");
+                } catch (Exception e) {
+                    android.util.Log.e("MainActivity", "Error sending broadcast", e);
+                }
             }
         });
 
 
-        // For listening for incoming SMS
-        registerReceiver(mySMSReceiver, intentFilterRec);
+        // For listening for incoming SMS (system broadcast)
+        // System broadcasts like SMS_RECEIVED require RECEIVER_EXPORTED
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mySMSReceiver, intentFilterRec, RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(mySMSReceiver, intentFilterRec);
+        }
 
         // For internal logging
-        registerReceiver(smsLogBroadcastReceiver, smsLogFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(smsLogBroadcastReceiver, smsLogFilter, RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(smsLogBroadcastReceiver, smsLogFilter);
+        }
 
         // for sending to the SmsSender
-        registerReceiver(smsSender, intentFilter);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(smsSender, intentFilter, RECEIVER_EXPORTED);
+                Log.d("MainActivity", "Registered SMSSender receiver with RECEIVER_EXPORTED");
+            } else {
+                registerReceiver(smsSender, intentFilter);
+                Log.d("MainActivity", "Registered SMSSender receiver without flag");
+            }
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error registering SMSSender receiver", e);
+        }
     }
 
     @Override
@@ -80,13 +119,15 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(smsLogBroadcastReceiver);
     }
 
-    BroadcastReceiver smsLogBroadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver smsLogBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // internet lost alert dialog method call from here...
 
             try {
                 final Bundle bundle = intent.getExtras();
+                if (bundle == null) return;
+                
                 String phone = bundle.getString("phone");
                 String message = bundle.getString("message");
 
@@ -96,15 +137,29 @@ public class MainActivity extends AppCompatActivity {
                         + message
                         + "]";
 
-                EditText editTextLog = (EditText) findViewById(R.id.editTextLog);
-                editTextLog.append(
-                        new Date().toString()
-                                + ": "
-                                + logMessage
-                                + "\n\n"
-                );
+                // Use runOnUiThread to safely access UI elements
+                if (MainActivity.this != null && !MainActivity.this.isFinishing()) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                EditText editTextLog = (EditText) MainActivity.this.findViewById(R.id.editTextLog);
+                                if (editTextLog != null) {
+                                    editTextLog.append(
+                                            new Date().toString()
+                                                    + ": "
+                                                    + logMessage
+                                                    + "\n\n"
+                                    );
+                                }
+                            } catch (Exception e) {
+                                Log.e("MainActivity", "Error updating log", e);
+                            }
+                        }
+                    });
+                }
             } catch (Exception e) {
-                Log.d(String.valueOf(R.string.log_receiver), "Error: " + e.getLocalizedMessage());
+                Log.e("MainActivity", "Error in smsLogBroadcastReceiver", e);
             }
         }
     };

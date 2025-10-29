@@ -1,1 +1,10 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'GSMHelperTool'
 include ':app'
